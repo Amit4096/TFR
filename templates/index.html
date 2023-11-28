@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload and Validation</title>
+    <style>
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f8f8f8;
+        }
+        
+        h1 {
+            color: #333;
+        }
+        
+        form {
+            margin-bottom: 20px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        p.error {
+            color: #d9534f;
+            font-weight: bold;
+        }
+        
+        p.validation-error {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        
+        p.correct {
+            color: #4caf50;
+            font-weight: bold;
+        }
+        
+        p.incorrect {
+            color: #d9534f;
+            font-weight: bold;
+        }
+        
+        input[type="file"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        button {
+            padding: 10px 15px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        /* Responsive Styles */
+        
+        @media only screen and (max-width: 600px) {
+            table {
+                font-size: 14px;
+            }
+        }
+        
+        /* Additional Styles for Correct and Incorrect Rows */
+        
+        .correct h2, .incorrect h2 {
+            margin-top: 20px;
+            color: #333;
+        }
+        
+        .correct table, .incorrect table {
+            margin-top: 10px;
+            background-color: #fff;
+        }
+        
+        /* Additional Styles for Number of Rows */
+        
+        .row-count p {
+            margin-top: 10px;
+        }
+        
+        /* Additional Styles for File Format Messages */
+        
+        .validation-message p {
+            margin-top: 10px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+    <h1>Trade File Reconciliation</h1>
+
+    <form action="/" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".txt">
+        <button type="submit" name="action" value="upload">Upload and Validate</button>
+        <button type="submit" name="action" value="view">View complete Data</button>
+    </form>
+    
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    {% if row_count %}
+        <p>Number of Rows: {{ row_count }}</p>
+    {% endif %}
+    <!-- ... Your existing code ... -->
+   
+{% if incorrect_rows %}
+<h2><p class="incorrect">Incorrect format</p></h2>
+<table border="1">
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Date</th>
+            <th></th>
+            <th></th>
+            <th>Spec</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Dealer id</th>
+            <th></th>
+            <th></th>
+            <th>Qty</th>
+            <th></th>
+            <th></th>
+            <th>Client ID</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Date and Time</th>
+            <th>Date and Time</th>
+            <th></th>
+            <th></th>
+            <th>Date and Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in incorrect_rows[:1000] %}
+            <tr>
+                {% for value in row[:26] %} {# Exclude the last column (index 26) #}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        
+    </tbody>
+</table>
+<br>
+<br>
+<p class="correct">Correct format should be<p>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Date</th>
+                <th></th>
+                <th></th>
+                <th>Spec</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Dealer id</th>
+                <th></th>
+                <th></th>
+                <th>Qty</th>
+                <th></th>
+                <th></th>
+                <th>Client ID</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Date and Time</th>
+                <th>Date and Time</th>
+                <th></th>
+                <th></th>
+                <th>Date and Time</th>
+            </tr>
+        </thead>
+        <tbody>
+    <tr>
+         
+        <td>430418711</td>
+     
+        <td>114</td>
+     
+        <td>OPTIDX</td>
+     
+        <td>BANKNIFTY </td>
+     
+        <td>22NOV2023</td>
+     
+        <td>  44200.00</td>
+     
+        <td>CE</td>
+     
+        <td>BANKNIFTY23N2244200CE    </td>
+     
+        <td>0 </td>
+     
+        <td>   </td>
+     
+        <td>1 </td>
+     
+        <td>DMAVIE10</td>
+     
+        <td>222</td>
+     
+        <td>2</td>
+     
+        <td>15       </td>
+     
+        <td>        4.45</td>
+     
+        <td>1</td>
+     
+        <td>B105V10F  </td>
+     
+        <td>ECASL0000357</td>
+     
+        <td>OPEN </td>
+     
+        <td>UNCOVER</td>
+     
+        <td>22 NOV 2023 09:16:33</td>
+     
+        <td>22 NOV 2023 09:16:33</td>
+     
+        <td>1500000001823957</td>
+     
+        <td>Nil  </td>
+     
+        <td>22 NOV 2023 09:16:33</td>
+    
+</tr>
+</tbody>
+
+</table>
+{% endif %}
+{% if incorrect_rows|length == 0  %}
+
+{% if correct_rows %}
+<h2><p class="correct">Correct format</p></h2>
+
+
+{% endif %}
+{% if correct_rows %}
+
+
+<table border="1">
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Date</th>
+            <th></th>
+            <th></th>
+            <th>Spec</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Dealer id</th>
+            <th></th>
+            <th></th>
+            <th>Qty</th>
+            <th></th>
+            <th></th>
+            <th>Client ID</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Date and Time</th>
+            <th>Date and Time</th>
+            <th></th>
+            <th></th>
+            <th>Date and Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in correct_rows[:10] %}
+            <tr>
+                {% for value in row[:26] %} {# Exclude the last column (index 26) #}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endif %} 
+
+    {% if validation_error %}
+        <p class="validation-error">{{ validation_error }}</p>
+    {% endif %}
+
+</body>
+</html>
+
+
+
+

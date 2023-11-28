@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload and Validation</title>
+
+    <!-- Add the DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+
+    <!-- Add jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- Add the DataTables JavaScript -->
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f8f8;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        p.error {
+            color: #d9534f;
+            font-weight: bold;
+        }
+
+        p.validation-error {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        p.correct {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        p.incorrect {
+            color: #d9534f;
+            font-weight: bold;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Responsive Styles */
+        @media only screen and (max-width: 600px) {
+            table {
+                font-size: 14px;
+            }
+        }
+
+        /* Additional Styles for Correct and Incorrect Rows */
+        .correct h2, .incorrect h2 {
+            margin-top: 20px;
+            color: #333;
+        }
+
+        .correct table, .incorrect table {
+            margin-top: 10px;
+            background-color: #fff;
+        }
+        .correct h2, .incorrect h2 {
+            margin-top: 20px;
+            color: #333;
+        }
+
+        .correct table, .incorrect table {
+            margin-top: 10px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    {% if row_count %}
+        <p>Number of Rows: {{ row_count }}</p>
+    {% endif %}
+
+    {% if correct_rows %}
+        <input type="checkbox" id="showAllRows"> Show All Rows
+        <br>
+        <br>
+        <table id="correct-table" class="display" border="1">
+            
+            {% set combined_rows = correct_rows + incorrect_rows %}
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Date</th>
+                    <th></th>
+                    <th></th>
+                    <th>Spec</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Dealer id</th>
+                    <th></th>
+                    <th></th>
+                    <th>Qty</th>
+                    <th></th>
+                    <th></th>
+                    <th>Client ID</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Date and Time</th>
+                    <th>Date and Time</th>
+                    <th></th>
+                    <th></th>
+                    <th>Date and Time</th>
+                </tr>
+                <tr>
+                    {% for header in combined_rows[0][:26] %}
+                        <th><input type="text" placeholder="Filter {{ header }}" /></th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in combined_rows[:correct_rows|length] %}
+                    <tr>
+                        {% for value in row[:26] %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if validation_error %}
+        <p class="validation-error">{{ validation_error }}</p>
+    {% endif %}
+  
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable with sorting options
+            var correctTable = $('#correct-table').DataTable({
+                "order": [] // This disables initial sorting
+            });
+    
+            // Add event listener for the checkbox
+            $('#showAllRows').on('change', function () {
+                if (this.checked) {
+                    // Show all rows
+                    correctTable.page.len(-1).draw();
+                } else {
+                    // Reset to default page length
+                    correctTable.page.len(10).draw();
+                }
+            });
+    
+            // Add column filters
+            correctTable.columns().every(function () {
+                var that = this;
+    
+                $('input', this.header()).on('keyup change', function () {
+                    if (that.search() !== this.value) {
+                        that
+                            .search(this.value)
+                            .draw();
+                    }
+                });
+            });
+        });
+    </script>
+    
+
+</body>
+</html>
